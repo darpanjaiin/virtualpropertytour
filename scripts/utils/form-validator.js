@@ -129,6 +129,12 @@ class FormValidator {
             // Show success message
             this.form.classList.add('hidden');
             document.getElementById('successMessage').classList.remove('hidden');
+
+            // Add to handleSubmit method after successful submission
+            if (data && data[0]) {
+                const tourId = data[0].id;
+                window.location.href = `/guest-call.html?tourId=${tourId}`;
+            }
         } catch (error) {
             this.showError('Failed to submit tour request. Please try again.');
         } finally {

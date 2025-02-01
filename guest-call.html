@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Property Tour</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/caretaker.css">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- PeerJS -->
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+</head>
+<body>
+    <main class="container">
+        <section id="videoCallSection" class="video-call">
+            <h1>Virtual Property Tour</h1>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <video id="localVideo" autoplay muted playsinline></video>
+                    <span class="video-label">You</span>
+                </div>
+                <div class="video-wrapper">
+                    <video id="remoteVideo" autoplay playsinline></video>
+                    <span class="video-label">Caretaker</span>
+                </div>
+            </div>
+            <div class="call-controls">
+                <button id="toggleVideo" class="control-btn">
+                    <span class="icon">📹</span>
+                </button>
+                <button id="toggleAudio" class="control-btn">
+                    <span class="icon">🎤</span>
+                </button>
+                <button id="endCall" class="control-btn danger">
+                    <span class="icon">📞</span>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="scripts/supabase/db-manager.js"></script>
+    <script src="scripts/webrtc/peer-manager.js"></script>
+    <script src="scripts/guest/call-manager.js"></script>
+</body>
+</html> 
