@@ -28,9 +28,9 @@ body {
 }
 
 h1 {
-    text-align: center;
     margin-bottom: 2rem;
-    color: var(--text-color);
+    text-align: center;
+    color: var(--primary-color);
 }
 
 .property-details {

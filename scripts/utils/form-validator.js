@@ -27,13 +27,12 @@ class FormValidator {
             this.propertyLoading.style.display = 'none';
             this.populatePropertySelect(properties);
         } catch (error) {
-            this.showError('Failed to load properties. Please try again later.');
-            this.propertyLoading.textContent = 'Failed to load properties. Please refresh the page.';
+            this.showError('Failed to load properties');
         }
     }
 
     populatePropertySelect(properties) {
-        this.properties = properties; // Store for later use
+        this.properties = properties;
         properties.forEach(property => {
             const option = document.createElement('option');
             option.value = property.id;
@@ -58,18 +57,12 @@ class FormValidator {
     }
 
     validateForm() {
-        const name = document.getElementById('guestName').value;
-        const email = document.getElementById('guestEmail').value;
-        const phone = document.getElementById('guestPhone').value;
-        const propertyId = document.getElementById('propertySelect').value;
+        const name = document.getElementById('guestName').value.trim();
+        const phone = document.getElementById('guestPhone').value.trim();
+        const propertyId = this.propertySelect.value;
 
-        if (!name || !email || !phone || !propertyId) {
+        if (!name || !phone || !propertyId) {
             this.showError('Please fill in all fields');
-            return false;
-        }
-
-        if (!this.validateEmail(email)) {
-            this.showError('Please enter a valid email address');
             return false;
         }
 
@@ -81,10 +74,6 @@ class FormValidator {
         return true;
     }
 
-    validateEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    }
-
     validatePhone(phone) {
         return /^\+?[\d\s-]{10,}$/.test(phone);
     }
@@ -94,15 +83,12 @@ class FormValidator {
         errorDiv.className = 'error';
         errorDiv.textContent = message;
         
-        // Remove any existing error messages
         const existingError = this.form.querySelector('.error');
         if (existingError) {
             existingError.remove();
         }
         
         this.form.insertBefore(errorDiv, this.form.querySelector('button'));
-        
-        // Remove error after 5 seconds
         setTimeout(() => errorDiv.remove(), 5000);
     }
 
@@ -111,7 +97,6 @@ class FormValidator {
         const btnText = submitBtn.querySelector('.btn-text');
         const loader = submitBtn.querySelector('.loader');
 
-        // Show loading state
         btnText.textContent = 'Scheduling...';
         loader.classList.remove('hidden');
         submitBtn.disabled = true;
@@ -119,26 +104,17 @@ class FormValidator {
         try {
             const formData = {
                 propertyId: this.propertySelect.value,
-                name: document.getElementById('guestName').value,
-                email: document.getElementById('guestEmail').value,
-                phone: document.getElementById('guestPhone').value
+                name: document.getElementById('guestName').value.trim(),
+                phone: document.getElementById('guestPhone').value.trim()
             };
 
             await dbManager.createTourRequest(formData);
             
-            // Show success message
             this.form.classList.add('hidden');
             document.getElementById('successMessage').classList.remove('hidden');
-
-            // Add to handleSubmit method after successful submission
-            if (data && data[0]) {
-                const tourId = data[0].id;
-                window.location.href = `/guest-call.html?tourId=${tourId}`;
-            }
         } catch (error) {
-            this.showError('Failed to submit tour request. Please try again.');
+            this.showError('Failed to submit tour request');
         } finally {
-            // Reset button state
             btnText.textContent = 'Schedule Tour';
             loader.classList.add('hidden');
             submitBtn.disabled = false;
@@ -146,7 +122,4 @@ class FormValidator {
     }
 }
 
-// Initialize form validator when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    new FormValidator('tourRequestForm');
-}); 
+new FormValidator('tourRequestForm'); 

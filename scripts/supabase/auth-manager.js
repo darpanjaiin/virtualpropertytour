@@ -8,8 +8,10 @@ class AuthManager {
         const { data: { user }, error } = await this.supabase.auth.getUser();
         
         if (error || !user) {
-            // Redirect to login if not authenticated
-            window.location.href = '/login.html';
+            // Only redirect if we're not already on the login page
+            if (!window.location.pathname.includes('login.html')) {
+                window.location.href = '/login.html';
+            }
             return;
         }
 
@@ -17,6 +19,11 @@ class AuthManager {
         const caretakerName = document.getElementById('caretakerName');
         if (caretakerName) {
             caretakerName.textContent = user.email;
+        }
+
+        // Redirect to dashboard if we're on the login page
+        if (window.location.pathname.includes('login.html')) {
+            window.location.href = '/caretaker.html';
         }
     }
 
@@ -26,13 +33,22 @@ class AuthManager {
             password
         });
 
-        if (error) throw error;
-        window.location.href = '/caretaker.html';
+        if (error) {
+            console.error('Login error:', error.message);
+            throw new Error(error.message);
+        }
+
+        if (data?.user) {
+            window.location.href = '/caretaker.html';
+        }
     }
 
     async logout() {
         const { error } = await this.supabase.auth.signOut();
-        if (error) throw error;
+        if (error) {
+            console.error('Logout error:', error.message);
+            throw new Error(error.message);
+        }
         window.location.href = '/login.html';
     }
 }
